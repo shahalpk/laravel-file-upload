@@ -1,0 +1,32 @@
+{
+    "name": "shahalpk/file-upload",
+    "description": "File upload package for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Shahalpk\\FileUpload\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Shahal Tharique",
+            "email": "shahalpk@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0"
+    },
+    "require-dev": {
+        "illuminate/support": "^7.0|^8.0",
+        "illuminate/database": "^7.0|^8.0",
+        "illuminate/http": "^7.0|^8.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Shahalpk\\FileUpload\\FileUploadServiceProvider"
+            ]
+        }
+    }
+}
