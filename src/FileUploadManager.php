@@ -81,7 +81,7 @@ class FileUploadManager
         }
         foreach ($fileIdArr as $fileId){
             FileUpload::where('file_id', $fileId)
-                ->update(['status' => FileUpload::STATUS_COMPLETED]);
+                ->update(['status' => FileUpload::CONFIRMATION_STATUS_CONFIRMED]);
         }
     }
 
@@ -91,7 +91,13 @@ class FileUploadManager
     }
 
     public function getFileUrl($fileId){
+        if ($fileId == null){
+            return null;
+        }
         $fileUpload = $this->getFileInfo($fileId);
+        if ($fileUpload == null){
+            return null;
+        }
         return Storage::disk($fileUpload->disk)->url($fileUpload->path);
     }
 }
