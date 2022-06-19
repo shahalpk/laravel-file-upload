@@ -100,4 +100,11 @@ class FileUploadManager
         }
         return Storage::disk($fileUpload->disk)->url($fileUpload->path);
     }
+
+    public function getFileUrls($fileIds): \Illuminate\Support\Collection
+    {
+        return collect($fileIds)->map(function ($id){
+            return $this->getFileUrl($id);
+        });
+    }
 }
