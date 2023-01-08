@@ -38,6 +38,39 @@ class FileUploadManager
         return $path;
     }
 
+    protected function _derivePathByPrefixAndSuffix($module, $moduleSuffix, $modulePrefix){
+        $path = null;
+        if (is_string($modulePrefix)) {
+            $path = $modulePrefix;
+        }
+        
+        if (is_string($module)){
+            $path = $path . '/' . $module ;
+        } 
+
+        if (is_string($moduleSuffix)){
+            $path = $path . '/' . $moduleSuffix;
+        }
+
+        return $path;
+    }
+
+    public function uploadFileBySuffixAndPrefix($file, string $module, string $moduleSuffix = null, string $modulePrefix = null){
+        $fileUpload = new FileUpload();
+        $fileUpload->disk = $this->disk;
+        $fileUpload->module = $module ?? 'default';
+        $fileUpload->confirmation_status = FileUpload::CONFIRMATION_STATUS_PENDING;
+
+        $uploadName = Carbon::now()->format("His-Ymd-")  . strtoupper(Str::random(5)) . 'I' . $fileUpload->id .  '.' . $file->extension();
+        $uploadPath = $this->_derivePathByPrefixAndSuffix($fileUpload->module, $moduleSuffix, $modulePrefix);
+        $storagePath = Storage::disk($this->disk)->putFileAs($uploadPath, $file, $uploadName);
+
+        $fileUpload->path = $storagePath;
+        $fileUpload->file_id = Str::uuid();
+        $fileUpload->save();
+        return $fileUpload;
+    }
+
 
     /**
      * Upload the files to file storage and insert record into
