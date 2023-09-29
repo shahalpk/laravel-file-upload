@@ -13,10 +13,12 @@ class FileUploadManager
 {
 
     protected $disk;
+    protected string $modelClass;
 
     public function __construct()
     {
         $this->disk = config('file-upload.disk');
+        $this->modelClass = config('file-upload.model_class');
     }
 
     protected function _derivePath($module, $category, $subCategory){
@@ -43,10 +45,10 @@ class FileUploadManager
         if (is_string($modulePrefix)) {
             $path = $modulePrefix;
         }
-        
+
         if (is_string($module)){
             $path = $path . '/' . $module ;
-        } 
+        }
 
         if (is_string($moduleSuffix)){
             $path = $path . '/' . $moduleSuffix;
@@ -56,7 +58,7 @@ class FileUploadManager
     }
 
     public function uploadFileBySuffixAndPrefix($file, string $module, string $moduleSuffix = null, string $modulePrefix = null){
-        $fileUpload = new FileUpload();
+        $fileUpload = new $this->modelClass();
         $fileUpload->disk = $this->disk;
         $fileUpload->module = $module ?? 'default';
         $fileUpload->confirmation_status = FileUpload::CONFIRMATION_STATUS_PENDING;
@@ -85,7 +87,7 @@ class FileUploadManager
      * @return mixed
      */
     public function uploadFile($file, $category = null, $subCategory = null, $module = null){
-        $fileUpload = new FileUpload();
+        $fileUpload = new $this->modelClass();
         $fileUpload->disk = $this->disk;
         $fileUpload->module = $module ?? 'default';
         $fileUpload->category = $category;
@@ -113,13 +115,13 @@ class FileUploadManager
             $fileIdArr = [$fileIdArr];
         }
         foreach ($fileIdArr as $fileId){
-            FileUpload::where('file_id', $fileId)
+            $this->modelClass::where('file_id', $fileId)
                 ->update(['status' => FileUpload::CONFIRMATION_STATUS_CONFIRMED]);
         }
     }
 
     public function getFileInfo($fileId){
-        $fileUpload = FileUpload::where('file_id', $fileId)->first();
+        $fileUpload = $this->modelClass::where('file_id', $fileId)->first();
         return $fileUpload;
     }
 

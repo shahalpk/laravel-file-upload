@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'disk' => 'public'
+    'disk' => 'public',
+    'model_class' => \Shahalpk\FileUpload\FileUpload::class,
 ];
