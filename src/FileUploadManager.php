@@ -19,6 +19,12 @@ class FileUploadManager
     {
         $this->disk = config('file-upload.disk');
         $this->modelClass = config('file-upload.model_class');
+        $this->basePrefix = config('file-upload.base_prefix');
+    }
+
+    protected function _getPath($path)
+    {
+        return $this->basePrefix . '/' . $path;
     }
 
     protected function _derivePath($module, $category, $subCategory){
@@ -37,7 +43,7 @@ class FileUploadManager
             $path = $path . '/' . $subCategory;
         }
 
-        return $path;
+        return $this->_getPath($path);
     }
 
     protected function _derivePathByPrefixAndSuffix($module, $moduleSuffix, $modulePrefix){
@@ -54,7 +60,7 @@ class FileUploadManager
             $path = $path . '/' . $moduleSuffix;
         }
 
-        return $path;
+        return $this->_getPath($path);
     }
 
     public function uploadFileBySuffixAndPrefix($file, string $module, string $moduleSuffix = null, string $modulePrefix = null){
